@@ -1,0 +1,17 @@
+{
+  "name": "react-native-flashcards",
+  "displayName": "react-native-flashcards",
+  "expo": {
+    "name": "react-native-flashcards",
+    "slug": "expo-template-bare",
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
