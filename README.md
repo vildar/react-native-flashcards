@@ -1,4 +1,4 @@
-# FLASHCARDS - REACT-NATIVE
+# Flashcards - React-Native
 This is a react native application which generates decks for users. The user can add as many cards as they want to each deck. These cards contain a question and an answer which the user inputs. The user may go through each flashcard and log their guesses for each one. Once they go through each card in the deck, a results page is displayed which displays the number of correct answers.
 
 ## Features
