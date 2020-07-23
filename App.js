@@ -1,36 +1,64 @@
-import * as React from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import React, {Component} from 'react';
+import {createStore} from 'redux'
+import {Provider} from 'react-redux'
+import reducer from './reducers'
+import { NavigationContainer } from '@react-navigation/native'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { createStackNavigator } from '@react-navigation/stack';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
+import DecksList from './components/DecksList'
+import AddCard from './components/AddCard'
+import AddDeck from './components/AddDeck'
+import Deck from './components/Deck'
+import Quiz from './components/Quiz'
+import { setLocalNotification } from './utils/helpers';
 
-const instructions = Platform.select({
-  ios: `Press Cmd+R to reload,\nCmd+D or shake for dev menu`,
-  android: `Double tap R on your keyboard to reload,\nShake or press menu button for dev menu`,
-});
+const Tab = createBottomTabNavigator()
+const Stack = createStackNavigator()
 
-export default function App() {
+function defaultView() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.welcome}>Welcome to React Native!</Text>
-      <Text style={styles.instructions}>To get started, edit App.js</Text>
-      <Text style={styles.instructions}>{instructions}</Text>
-    </View>
-  );
+    <Tab.Navigator 
+      initialRouteName="Decks"
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color, size }) => {
+          if (route.name === 'Decks') {
+            return <MaterialCommunityIcons name="cards" size={size} color={color} />
+          } else if (route.name === 'Add Deck') {
+            return <Ionicons name="md-add-circle" size={size} color={color} />
+          }
+        },
+      })}
+      tabBarOptions={{
+        activeTintColor: '#0AB9A5',
+        inactiveTintColor: 'black',
+      }}
+    >
+      <Tab.Screen name="Decks" component={DecksList} />
+      <Tab.Screen name="Add Deck" component={AddDeck} />
+    </Tab.Navigator>
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+export default class App extends Component {
+  componentDidMount() {
+    setLocalNotification()
+  }
+  
+  render(){
+    const store = createStore(reducer)
+
+    return (
+      <Provider store={store}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen name="Home" component={defaultView} options={{title: 'Decks'}}/>
+            <Stack.Screen name="Individual Deck View" component={Deck} />
+            <Stack.Screen name="Add Card" component={AddCard} />
+            <Stack.Screen name="Quiz View" component={Quiz} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
+    )
+  }
+}
